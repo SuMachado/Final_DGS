@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Record the administration of a vaccine to an SNS user (SSD)
+
+autonumber
+
+actor Nurse
+participant ":System" as System
+
+activate Nurse
+    Nurse -> System : Starts the process of recording a vaccine administration
+    activate System
+        System --> Nurse : Shows the available types and brands of vaccines, asks to choose them and write lot number
+    deactivate System
+
+    Nurse -> System : Chooses requested data (type and brand) and writes lot number and possible adverse reactions
+    activate System
+        System --> Nurse : Confirms if the record was made.
+    deactivate System
+deactivate Nurse
+
+@enduml

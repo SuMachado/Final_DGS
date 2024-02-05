@@ -1,0 +1,176 @@
+@startuml
+'https://plantuml.com/object-diagram
+
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+
+class Brand {
+    - Name
+    - BrandID
+}
+
+class CheckIn {
+    - SNSUser number
+    - Appointment data
+}
+
+class Administrator {
+  - EmployeeID
+  - Name
+  - Phone
+  - Email
+  - Citizen Card Number
+  - Address
+  - Birthdate
+  - Emergency Contact Information
+  - Employee Type
+}
+
+class Facility {
+  - FacilityId
+  - Capacity
+  - Name
+  - Phone
+  - Website/Email
+  - Working Hours
+  - Facility Type
+  - Address
+  - Max vaccines per H
+  - Active Status
+}
+
+class Employee {
+    - EmployeeID
+    - Name
+    - Phone
+    - Email
+    - Citizen Card Number
+    - Address
+    - Birthdate
+    - Emergency Contact Information
+    - Employee Type
+}
+
+
+class Vaccine {
+  - Name
+  - VaccineID
+  - Vaccine Type
+  - Brand
+}
+
+class Appointment {
+    - AppointmentID
+    - Status
+    - Date
+    - Time
+    - Vaccine Type
+    - SNS User Number
+    - Facility
+    - Batch
+    - Observations
+}
+
+class SNSUser {
+    -SNSUserID
+    - Name
+    - Birthdate
+    - Sex
+    - Postal Address
+    - E-mail Address
+    - Citizen Card Number
+    - SNS User Number
+}
+
+class Nurse {
+    - EmployeeID
+    - Name
+    - Phone
+    - Email
+    - Citizen Card Number
+    - Address
+    - Birthdate
+    - Emergency Contact Information
+    - Employee Type
+
+}
+
+class VaccineTechnology {
+    - Name
+    - Description
+    - VaccineTechID
+}
+
+class VaccineType {
+    - CodeType
+    - Name
+    - Description
+}
+
+class Batch {
+    - number
+    - expirationDate
+}
+
+class Receptionist {
+    - EmployeeID
+    - Full Name
+    - Contact Details
+    - Address
+    - Birthdate
+    - Emergency Contact Information
+    - Employee Type
+    - Documentation
+}
+
+class InfoRegistry {
+    - ID
+    - Vaccine Batch
+    - Possible adverse reactions
+}
+class SNSUserRegistration {
+}
+
+
+Administrator "1" --- "*" VaccineType : specifies a >
+Appointment "1" --- "0..1" InfoRegistry : is part of
+Appointment "*" --- "1" Facility : has an
+Administrator "1" --- "1..*" Facility : registers
+CheckIn "0..1 " --- " 1 " Appointment : is part of >
+CheckIn " * " --- " 1 " SNSUser : is part of >
+Employee " 1 " --- " 0..1 " Receptionist : is <
+Facility "*" --- "*" Employee : is part of
+Nurse "1" --- "*" InfoRegistry : makes
+Nurse "1" --- "1" SNSUser : Calls/Check info
+Nurse "0..1" --- "1" Employee : is
+Nurse "1" --- "*" Appointment : Checks info
+Nurse "1" --- "1..*" Vaccine : administers
+Vaccine "*" -- "1" VaccineType : has a >
+Vaccine "1" --- "*" Facility : is given at
+Vaccine "*" --- "1" Brand : manufactures <
+Vaccine "1" --- "*" Batch : is part of
+Vaccine "1" --- "*" InfoRegistry : is part of
+Vaccine "1" --- "*" Appointment : is part of
+Vaccine "*" --- "1" Administrator : creates a >
+VaccineTechnology "1" --- "*" VaccineType : has a <
+Receptionist " 1 " --- " * " SNSUser : receives >
+Receptionist " 1 " --- " * " CheckIn : validates >
+Receptionist " 1 " --- " * " Appointment : schedules >
+Receptionist " 0..1 " --- " * " SNSUserRegistration : Manages
+SNSUserRegistration "*" --- "1" Facility : occurs >
+SNSUser " * " --- " 1 " SNSUserRegistration : requests >
+SNSUser " 1 " --- " 1..* " Appointment : has an >
+SNSUser "1" --- "1" InfoRegistry : is part of
+SNSUser "1" --- "1..*" Appointment : makes an Appointment
+SNSUser " * " --- " 1 " Facility : arrives >
+
+@enduml

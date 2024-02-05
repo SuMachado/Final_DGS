@@ -1,0 +1,69 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title As receptionist, I want to schedule a vaccination
+
+autonumber
+
+actor Receptionist
+participant SNSUser
+participant ":ScheduleVaccinationUI" as ui
+participant ":ScheduleVaccinationController" as ctrl
+participant Repositories
+participant "vaccineTypeRepo : VaccineTypeRepository" as vaccineTypeRepo
+participant "vaccinationScheduleRepo : VaccinationScheduleRepository" as scheduleRepo
+participant "vaccinationSchedule : VaccinationSchedule" as schedule
+
+activate Receptionist
+
+
+    SNSUser-> Receptionist : wants to make an appointment
+    Receptionist -> ui : starts the process of scheduling a vaccination
+    activate ui
+        ui -> ctrl** : loadVaccinesType()
+        activate ctrl
+            ctrl -> Repositories : getVaccineTypeRepository()
+            activate Repositories
+                Repositories -> Repositories : vaccineTypeRepository()
+                Repositories --> ctrl : vaccineTypeRepo
+            deactivate Repositories
+            ctrl -> vaccineTypeRepo : getAllVaccinesType()
+            activate vaccineTypeRepo
+                vaccineTypeRepo -> vaccineTypeRepo : getAllVaccinesType()
+                vaccineTypeRepo --> ctrl : vaccineTypeList
+            deactivate vaccineTypeRepo
+            ctrl --> ui : vaccineTypeList
+            ui --> Receptionist : shows the available vaccinesType
+        deactivate ctrl
+    deactivate ui
+
+    Receptionist -> ui : selects a vaccineType insert SNSUserNumber and schedules a date
+    activate ui
+        ui -> ctrl : scheduleVaccination(vaccineType, SNSUserNumber, date)
+        activate ctrl
+            ctrl -> Repositories : getVaccinationScheduleRepository()
+            activate Repositories
+                Repositories -> Repositories : vaccinationScheduleRepository()
+                Repositories --> ctrl : scheduleRepo
+            deactivate Repositories
+            ctrl -> scheduleRepo : createVaccinationSchedule(vaccineType, date)
+            activate scheduleRepo
+                scheduleRepo -> schedule : create()
+
+                activate schedule
+                    schedule -> schedule : localValidation()
+                    schedule --> scheduleRepo : schedule
+                deactivate schedule
+                scheduleRepo -> scheduleRepo : globalValidation(schedule)
+                scheduleRepo --> ctrl : schedule
+            deactivate scheduleRepo
+            ctrl --> ui : success
+        deactivate ctrl
+        ui --> Receptionist : notifies success and provides confirmation
+    deactivate ui
+
+deactivate Receptionist
+
+@enduml

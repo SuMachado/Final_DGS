@@ -1,0 +1,42 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Get a list of employees with a given function/role
+
+autonumber
+
+actor Administrator
+participant ":EmployeeUI" as ui
+participant ":EmployeeListController" as ctrl
+participant Repositories
+participant "employeeRepo : EmployeeRepository" as employeeRepo
+participant "ListOfEmployeesRepo : ListOfEmployeesRepository" as ListOfEmployeesRepo
+
+
+activate Administrator
+
+    Administrator -> ui : requests
+    activate ui
+        ui -> ctrl** : initiateRequest()
+        activate ctrl
+            ctrl -> Repositories : getEmployeeRepository()
+            activate Repositories
+                Repositories -> Repositories : EmployeeRepository()
+                Repositories-->ctrl : employeeRepo
+            deactivate Repositories
+            ctrl -> employeeRepo : retrieveEmployeeList()
+            activate employeeRepo
+                employeeRepo -> ListOfEmployeesRepo : retrieveEmployeesWithGivenFunction()
+            activate ListOfEmployeesRepo
+                listOfEmployeesRepo --> employeeRepo : employees
+            deactivate listOfEmployeesRepo
+            employeeRepo --> ctrl : employeeList
+            deactivate employeeRepo
+            ctrl --> ui : employeeList
+            ui -> Administrator : shows retrieved employee list
+        deactivate ctrl
+    deactivate ui
+
+@enduml

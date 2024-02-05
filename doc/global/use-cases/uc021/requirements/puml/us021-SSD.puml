@@ -1,0 +1,30 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Schedule a vaccination (SSD)
+
+autonumber
+
+actor Receptionist
+participant ":System" as System
+
+activate Receptionist
+    Receptionist -> System : starts the process of scheduling the vaccination
+    activate System
+        System --> Receptionist : requests SNS user id and date and facility for the intended vaccination
+    deactivate System
+
+    Receptionist -> System : fills requested data (SNS user id, date and facility)
+    activate System
+        System --> Receptionist : validates and asks for confirmation
+    deactivate System
+
+    Receptionist -> System : confirms
+    activate System
+        System --> Receptionist : records the information and notifies the success of the operation
+    deactivate System
+deactivate Receptionist
+
+@enduml

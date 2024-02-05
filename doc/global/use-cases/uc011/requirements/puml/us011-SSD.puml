@@ -1,0 +1,31 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Register a Vaccine (SSD)
+
+autonumber
+
+actor Administrator
+participant ":System" as System
+
+activate Administrator
+    Administrator -> System : request to register a new vaccine
+    activate System
+        System --> Administrator : validates the request and asks for the data
+    deactivate System
+
+    Administrator -> System : provides vaccine data (name, brand and vaccine type)
+    activate System
+        System --> Administrator : validates the input data and asks for confirmation
+    deactivate System
+
+    Administrator -> System : confirms the previously provided data
+    activate System
+        System --> Administrator : records the information and notifies the success of the operation, showing also an automatically generated ID.
+    deactivate System
+
+deactivate Administrator
+
+@enduml

@@ -1,0 +1,50 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title US020 - As receptionist, I want to register an SNS user.
+
+class Facility {
+Health Center
+Vaccination Center
+}
+class Receptionist {
+    - Full Name
+    - Contact Details
+    - Address
+    - Date of Birth
+    - Emergency Contact Information
+    - Employee Type
+    - Documentation
+}
+
+class SNS_User {
+Name
+Birth Date
+Sex
+Postal Address
+Phone Number
+E-mail Address
+Citizen Card Number
+SNS User Number
+}
+
+class Registration {
+}
+
+
+
+'VaccineTechnology -down-Vaccine
+Registration "1   " -- "   1   " Facility : ocurs >
+Receptionist " * " -- " * " Registration : "Manages"
+SNS_User " 1 " -- " 1 " Registration : requests >
+
+@enduml

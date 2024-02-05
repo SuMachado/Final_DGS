@@ -1,0 +1,53 @@
+@startuml
+'https://plantuml.com/object-diagram
+
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class Appointment {
+    - SNS User Number
+    - Date
+    - Time
+    - Vaccine Type
+}
+
+class SNSUser {
+    - Name
+    - Birth Date
+    - Sex
+    - Postal Address
+    - E-mail Address
+    - Citizen Card Number
+    - SNS User Number
+}
+class Nurse {
+    - Full Name
+    - Contact Details
+    - Address
+    - Date of Birth
+    - Emergency Contact Information
+    - Employee Type
+    - Documentation
+}
+
+
+class HealthcareFacility {
+    Category
+}
+
+Nurse "1" --- "1" SNSUser : Calls/Check info
+Nurse "*" --- "1.." HealthcareFacility : is part of
+Nurse "1" --- "1" Appointment : Checks info
+SNSUser "1" --- "1" Appointment : waits for the Appointment
+
+Appointment "*" --- "1" HealthcareFacility : has a
+
+@enduml

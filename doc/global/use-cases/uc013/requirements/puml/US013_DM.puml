@@ -1,0 +1,78 @@
+@startuml
+'https://plantuml.com/object-diagram
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class Facility {
+  - RegistrationID
+  - RegistrationDate
+  - ApprovalStatus
+}
+
+class FacilityType {
+    VaccinationCenter
+    HealthCareCenter
+}
+class Facility {
+
+  - ID
+  - Name
+  - Address
+  - ContactInfo
+  - WorkingHours
+  - MaxVaccinesPerDay
+  - MaxVaccinesPerHour
+}
+
+class RegistrationRecord {
+  - ID
+  - RegistrationID
+  - RegistrationDate
+  - ApprovalStatus
+}
+
+class Administrator {
+  - Name
+  - AdminID
+  - ContactInfo
+}
+
+
+
+
+
+class Documentation {
+  - Licences
+  - Permits
+}
+
+class HealthGuidelines {
+  - Guideline
+}
+
+class VaccineType {
+  - Name
+  - ID
+  - Type
+  - Manufacturer
+  - AdministrationTime
+  - Dose
+}
+
+Facility "*" -- "1" FacilityType : is a
+Facility "1" -- "1" RegistrationRecord : logs details in
+Administrator "1" -- "1..*" Facility : performs registration for
+
+Facility "1" -- "1..*" Documentation : has
+Facility "1" -- "1..*" HealthGuidelines : has
+Facility "*" -- "*" VaccineType : is part of
+
+@enduml

@@ -1,0 +1,74 @@
+@startuml
+'https://plantuml.com/object-diagram
+
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class Appointment {
+    - SNS User Number
+    - Date
+    - Time
+    - Vaccine Type
+}
+
+class InfoRegistry{
+    - Vaccine lot number
+    - Possible adverse reactions
+}
+
+class SNSUser {
+    - Name
+    - Birth Date
+    - Sex
+    - Postal Address
+    - E-mail Address
+    - Citizen Card Number
+    - SNS User Number
+}
+class Nurse {
+    - Full Name
+    - Contact Details
+    - Address
+    - Date of Birth
+    - Emergency Contact Information
+    - Employee Type
+    - Documentation
+}
+
+class Vaccine {
+    - ID
+    - Name
+    - Brand
+    - Vaccine type
+}
+
+class Batch {
+    - number
+    - vaccine
+    - quantity?
+
+}
+class HealthcareFacility {
+     Category
+ }
+
+
+Nurse "1" --- "1" SNSUser : Check info
+Nurse "1" --- "1" Appointment : Checks info
+SNSUser "1" --- "1" Appointment : had an
+Nurse "*" --- "1" InfoRegistry : makes
+Appointment "1" --- "1" InfoRegistry : is part of
+Vaccine "1" --- "*" InfoRegistry : is part of
+Vaccine "1" --- "*" Appointment : is part of
+SNSUser "1" --- "1" InfoRegistry : is part of
+Batch "1" --- "*" InfoRegistry : is part of
+Vaccine "1" --- "*" Batch : is part of
+@enduml

@@ -1,0 +1,30 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Register an SNS user as a Receptionist (SSD)
+
+autonumber
+
+actor Receptionist
+participant ":System" as System
+
+activate Receptionist
+    Receptionist -> System : starts the process of registering a new SNS user
+    activate System
+        System --> Receptionist : requests data for the registration(Name, Birth Date, Sex, Postal Address, \n Phone Number, E-mail Address, Citizen Card Number and SNS User Number)
+    deactivate System
+
+    Receptionist -> System : fills requested data (Name, Birth Date, Sex, Postal Address, \n Phone Number, E-mail Address, Citizen Card Number and SNS User Number)
+    activate System
+        System --> Receptionist : validates and asks for confirmation
+    deactivate System
+
+    Receptionist -> System : confirms
+    activate System
+        System --> Receptionist : records the information and notifies the success of the operation
+    deactivate System
+deactivate Receptionist
+
+@enduml

@@ -1,0 +1,35 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor Administrator
+participant ":System" as System
+
+activate Administrator
+    Administrator -> System : starts the process of registering a vaccination center to respond to a certain pandemic
+    activate System
+        System --> Administrator : requests location and facility details
+    deactivate System
+
+    Administrator -> System : provides location and facility details
+    activate System
+        System --> Administrator : validates and requests additional information (contact, documentation, staff, health guidelines)
+    deactivate System
+
+    Administrator -> System : provides additional information
+        activate System
+            System --> Administrator : validates and asks for confirmation
+        deactivate System
+
+        Administrator -> System : confirms registration
+        activate System
+            System --> Administrator : records the information and notifies the success of the operation
+        deactivate System
+    deactivate Administrator
+
+@enduml

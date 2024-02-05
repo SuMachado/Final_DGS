@@ -1,0 +1,28 @@
+@startuml
+'https://plantuml.com/object-diagram
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class EmployeeList {
+}
+
+class ListOfEmployeesWithGivenFunction {
+}
+
+class Administrator {
+}
+
+EmployeeList "1" -- "1..*" ListOfEmployeesWithGivenFunction : retrieves
+Administrator "1" -- "1..*" EmployeeList : requests
+
+@enduml
+
+

@@ -1,0 +1,60 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title US011 - Register a Vaccine
+
+class Vaccine {
+  ID
+  name
+  brand
+  vaccineType
+}
+
+
+class VaccineType {
+    code
+    shortDescription
+}
+
+class Brand {
+    name
+}
+
+class RegisterVaccine {
+ID
+name
+brand
+vaccineType
+}
+
+class VaccineTechnology {
+    name
+    description
+}
+
+class Administrator {
+user ID
+active Status
+login
+name
+phone
+email
+}
+
+
+VaccineTechnology "1" -left- "*" VaccineType : has a <
+Vaccine "*" - "1" Brand : manufactures <
+Vaccine "*" -- "*" VaccineType : is part of <
+RegisterVaccine "*" - "*" Administrator : creates a <
+RegisterVaccine "*" -- "*" Vaccine : requires a >
+
+@enduml

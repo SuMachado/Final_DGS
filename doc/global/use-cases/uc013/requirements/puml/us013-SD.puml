@@ -1,0 +1,72 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Register Health Facility
+
+autonumber
+
+actor Administrator
+participant ":RegisterFacilityUI" as ui
+participant ":RegisterFacilityController" as ctrl
+participant Repositories
+participant "facilityRepo : FacilityRepository" as facilityRepo
+
+activate Administrator
+
+    Administrator -> ui : starts registration process
+    activate ui
+        ui -> ctrl** : create()
+        ui -> ctrl : initiatesRegistration()
+        activate ctrl
+            ctrl -> ctrl : registerFacilityRepository()
+
+            ctrl -> ui : registerFacilityRepository()
+
+        deactivate ctrl
+        ui --> Administrator : asks data
+    deactivate ui
+
+    Administrator -> ui : fills requested data for a new facility (address, contact info, ...)
+    activate ui
+
+        ui -> ctrl : createFacility (address, contactInfo, ...)
+        activate ctrl
+
+            ctrl -> Repositories : getVaccinationCenterRepository()
+            activate Repositories
+                Repositories -> Repositories : getVaccinationCenterRepository()
+                Repositories --> ctrl : facilityRepo
+            deactivate Repositories
+            ctrl -> facilityRepo : createVacCenter(address, contactInfo, documentation, staffData)
+            activate facilityRepo
+                facilityRepo -> Facility** : create()
+                activate Facility
+                    Facility -> Facility : getLocalValidation()
+                    Facility --> facilityRepo : newFacility
+                deactivate Facility
+                facilityRepo --> ctrl : newFacility
+            deactivate facilityRepo
+            ctrl --> ui : newFacility
+        deactivate ctrl
+        ui --> Administrator : validates and asks for confirmation
+    deactivate ui
+
+    Administrator -> ui : confirms
+    activate ui
+        ui -> ctrl : save()
+        activate ctrl
+            ctrl -> facilityRepo : save(newFacility)
+            activate facilityRepo
+                facilityRepo -> facilityRepo : globalValidation(newFacility)
+                facilityRepo -> facilityRepo : add(newFacility)
+                facilityRepo --> ctrl : success
+            deactivate facilityRepo
+            ctrl --> ui : success
+        deactivate ctrl
+        ui --> Administrator : records the information and notifies the success of the operation
+    deactivate ui
+deactivate Administrator
+
+@enduml

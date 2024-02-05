@@ -1,0 +1,122 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+!define PK <<PK>>
+
+'skinparam monochrome true
+'skinparam packageStyle rectangle
+'skinparam shadowing false
+'
+'left to right direction
+'
+'skinparam classAttributeIconSize 0
+'
+'hide circle
+'hide methods
+
+
+class Brand {
+    - Name
+    + BrandID <<PK>>
+
+}
+
+'class CheckIn {
+'    - SNSUser number
+'    - Appointment data
+'    + CheckinID <<PK>>
+'}
+
+class Administrator {
+  + UserID <<PK>>
+  - Active Status
+  - Name
+  - Phone
+  - Email
+}
+
+class Facility {
+  + FacilityId <<PK>>
+  - Capacity
+  - WorkingHours
+  - Health Center
+  - Vaccination Center
+}
+
+class Employee {
+    + EmployeeID <<PK>>
+    - Name
+    - Address
+    - Birthdate
+}
+
+
+class Vaccine {
+  - Name
+  + VaccineID <<PK>>
+  - Vaccine type <<FK>>
+}
+
+class Appointment {
+    + AppointmentID <<PK>>
+    - SNS User Number
+    - Date
+    - Time
+    - Vaccine Type
+}
+
+class SNSUser {
+    + SNSUserID <<PK>>
+    - Name
+    - Birth Date
+    - Sex
+    - Postal Address
+    - E-mail Address
+    - Citizen Card Number
+    - SNS User Number
+}
+class Nurse {
+    + EmployeeID <<PK>> <<FK>>
+    - Full Name
+    - Contact Details
+    - Address
+    - Date of Birth
+    - Emergency Contact Information
+    - Employee Type
+    - Documentation
+}
+
+class VaccineTechnology {
+    + VaccineTechID <<PK>>
+    - Name
+    - Description
+}
+
+class VaccineType {
+    + CodeType <<PK>>
+    - ShortDescription
+}
+
+class Batch {
+    + Batch Number <<PK>>
+    - Expiration Date
+}
+
+class Receptionist {
+    + EmployeeID <<PK>> <<FK>>
+    - Full Name
+    - Contact Details
+    - Address
+    - Date of Birth
+    - Emergency Contact Information
+    - Employee Type
+    - Documentation
+}
+
+class InfoRegistry {
+    + InfoRegistryID <<PK>>
+    - Vaccine Batch
+    - Possible adverse reactions
+}
+
+@enduml

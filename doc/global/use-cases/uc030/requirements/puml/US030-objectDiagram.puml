@@ -1,0 +1,43 @@
+@startuml
+'https://plantuml.com/object-diagram
+
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class OnlineAppointment {
+    - SNS User Number
+    - Date
+    - Time
+    - Vaccine Type
+}
+
+class SNSUser {
+    - Name
+    - Birth Date
+    - Sex
+    - Postal Address
+    - E-mail Address
+    - Citizen Card Number
+    - SNS User Number
+}
+
+
+
+class HealthcareFacility {
+    Category
+}
+
+
+SNSUser "1" --- "1" OnlineAppointment : registers an Appointment
+
+OnlineAppointment "*" --- "1" HealthcareFacility : has a
+
+@enduml

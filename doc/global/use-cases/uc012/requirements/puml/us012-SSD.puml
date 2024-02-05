@@ -1,0 +1,27 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Get a List of all the Vaccines (SSD)
+
+autonumber
+
+actor Administrator
+participant ":System" as System
+
+activate Administrator
+    Administrator -> System : request to retrieve list of vaccines
+    activate System
+        System --> Administrator : validates request and shows the list
+    deactivate System
+
+    Administrator -> System : provides search criteria (vaccine code, technology, ID, name, brand, type)
+    activate System
+        System --> Administrator : returns list of existing vaccines by criteria or notifies "No Matches Found"
+    deactivate System
+
+
+deactivate Administrator
+
+@enduml

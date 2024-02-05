@@ -1,0 +1,115 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Nurse registers a vaccination
+
+autonumber
+
+actor Nurse
+participant ":RegisterVaccinationInfo" as ui
+participant ":RegisterVaccinationInfoController" as ctrl
+participant Repositories
+participant "healthFacilitiesRepo : HealthFacilitiesRepo" as healthFacilitiesRepo
+
+activate Nurse
+
+    Nurse -> ui : log in nurse
+    activate ui
+
+        ui -> ctrl** : registerVaccination()
+        ui -> ctrl : getHealthFacilitySchedule()
+        activate ctrl
+
+            ctrl -> Repositories : getHealthFacilitySchedule()
+            activate Repositories
+                Repositories -> Repositories : getHealthFacility()
+                Repositories-->ctrl : getHealthFacility()
+            deactivate Repositories
+            ctrl -> healthFacilitiesRepo : getHealthFacility()
+            activate healthFacilitiesRepo
+                healthFacilitiesRepo -> healthFacilitiesRepo : getHealthFacility()
+                healthFacilitiesRepo --> ctrl : healthFacilityList
+            deactivate healthFacilitiesRepo
+            ctrl --> ui : healthFacilityList
+            deactivate ctrl
+            ui --> Nurse : shows the list of health facilities and asks to choose one
+
+    deactivate ui
+
+    Nurse -> ui : selects the health facility
+    activate ui
+
+        ui -> ctrl : asks for schedule(healthFacility)
+        activate ctrl
+
+            ctrl -> Repositories : getHealthFacilitySchedule()
+            activate Repositories
+                Repositories -> Repositories : getHealthFacilitySchedule()
+                Repositories --> ctrl : getHealthFacilitySchedule()
+            deactivate Repositories
+            ctrl -> healthFacilitiesRepo : getHealthFacilitySchedule(healthFacility)
+            activate healthFacilitiesRepo
+
+                healthFacilitiesRepo -> healthFacilitiesRepo : getHealthFacilitySchedule(healthFacility)
+                healthFacilitiesRepo --> ctrl : healthFacilitySchedule
+            deactivate healthFacilitiesRepo
+            ctrl --> ui : healthFacilitySchedule
+
+        deactivate ctrl
+        ui --> Nurse : shows the schedule for the day
+    deactivate ui
+
+    Nurse -> ui : selects an appointment
+    activate ui
+        ui->ctrl : getAppointment()
+        activate ctrl
+            ctrl -> Repositories : getAppointment()
+            activate Repositories
+                Repositories -> Repositories : getAppointment()
+                Repositories --> ctrl : getAppointment()
+            deactivate Repositories
+            ctrl -> appointmentsRepo : getAppointment()
+            activate appointmentsRepo
+                appointmentsRepo -> appointmentsRepo : getAppointment()
+                appointmentsRepo --> ctrl : appointment
+            deactivate appointmentsRepo
+            ctrl --> ui : appointment
+        deactivate ctrl
+        ui --> Nurse : shows the appointment, asks to insert observations and choose vaccine lot number
+    deactivate ui
+    Nurse -> ui : inserts observations and chooses vaccine lot number
+    activate ui
+        ui -> ctrl : registerVaccination()
+        activate ctrl
+            ctrl -> appointmentsRepo : setAppointment()
+            activate appointmentsRepo
+                appointmentsRepo -> appointmentsRepo : setAppointment()
+                appointmentsRepo -> appointmentsRepo : globalValidation(appointment)
+                appointmentsRepo --> ctrl : appointment
+            deactivate appointmentsRepo
+            ctrl --> ui : appointment_updated
+        deactivate ctrl
+        ui --> Nurse : validates and asks for confirmation
+    deactivate ui
+
+    Nurse -> ui : confirms
+    activate ui
+        ui -> ctrl : save()
+        activate ctrl
+            ctrl -> appointmentsRepo : save(appointment)
+            activate appointmentsRepo
+                appointmentsRepo -> appointmentsRepo : globalValidation(appointment)
+                appointmentsRepo -> appointmentsRepo : add(appointment)
+                appointmentsRepo --> ctrl : success
+            deactivate appointmentsRepo
+            ctrl --> ui : success
+        deactivate ctrl
+        ui --> Nurse : records the information and notifies the success of the operation
+    deactivate ui
+deactivate Nurse
+
+deactivate Nurse
+
+@enduml

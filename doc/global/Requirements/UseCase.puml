@@ -1,0 +1,42 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+left to right direction
+
+actor "System Administrator" as Adm
+actor "Receptionist" as Recep
+actor "SNS User" as User
+actor "Nurse" as Nurse
+
+usecase "US010 - Specify a new vaccine type" as US010
+usecase "US011 - Register a vaccine" as US011
+usecase "US012 - Get a list of all vaccines" as US012
+usecase "US013 - Register a vaccination center to respond to a certain pandemic" as US013
+usecase "US014 - Register employee" as US014
+usecase "US015 - List employees with a role" as US015
+
+usecase "US020 - Register a SNS user" as US020
+usecase "US021 - "Schedule vaccination" as US021
+usecase "US022 - Register the arrival of a SNS user" as US022
+
+usecase "US030 - Use the application to schedule a vaccination" as US030
+
+usecase "US040 - Consult the users in the waiting room of a vaccination center" as US040
+usecase "US041 - Record the administration of a vaccine to a SNS user" as US041
+
+Adm -down-> US010
+Adm -down-> US011
+Adm -down-> US012
+Adm -down-> US013
+Adm -down-> US014
+Adm -down-> US015
+
+Recep -down-> US020
+Recep -down-> US021
+Recep -down-> US022
+
+User -down-> US030
+
+Nurse -down-> US040
+Nurse -down-> US041
+
+@enduml

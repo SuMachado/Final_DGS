@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title US030 - User makes an appointment to get a vaccination (SSD)
+
+autonumber
+'As SNS user, I intend to use the application to schedule a vaccination
+actor SNS_user
+participant ":System" as System
+
+activate SNS_user
+    SNS_user -> System : Starts the process of creating a new appointment to get a vaccination
+    activate System
+        System --> SNS_user : Shows the Healthcare Facility available
+    deactivate System
+
+    SNS_user -> System : Selects the Healthcare Facility and fills his user number, date, time and type of vaccine
+    activate System
+        System --> SNS_user : Checks the center capacity and, if possible, confirms the scheduled appointment\nInform the user that should be at the selected Healthcare Facility at the scheduled day and time
+    deactivate System
+deactivate SNS_user
+
+@enduml

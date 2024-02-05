@@ -1,0 +1,72 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Register an employee
+
+autonumber
+
+actor Administrator
+participant ":EmployeeRegistrationUI" as ui
+participant ":EmployeeRegistrationController" as ctrl
+participant Repositories
+participant "employeeRepo : EmployeeRepository" as employeeRepo
+
+
+activate Administrator
+
+    Administrator -> ui : starts registration process
+    activate ui
+        ui -> ctrl** : initiateRegistration()
+        activate ctrl
+            ctrl -> Repositories : getEmployeeRepository()
+            activate Repositories
+                Repositories -> Repositories : employeeRepository()
+                Repositories-->ctrl : employeeRepo
+            deactivate Repositories
+            ctrl -> employeeRepo : initiateRegistration()
+            activate employeeRepo
+                employeeRepo -> ctrl : employee()
+            deactivate employeeRepo
+            ctrl --> ui : employee
+            ui --> Administrator : shows available data
+        deactivate ctrl
+    deactivate ui
+
+    Administrator -> ui : fills requested data (full name, contactInfo, address, birthdate, employee role, docs, emergency contacts info)
+    activate ui
+        ui -> ctrl : createRegistration(fullName, contactInfo, address, birthdate, role, docs, emergencyContactsInfo)
+        activate ctrl
+            ctrl -> Repositories : getEmployeeRepository()
+            activate Repositories
+                Repositories -> Repositories : getEmployeeRepository()
+                Repositories --> ctrl : employeeRepo
+            deactivate Repositories
+            ctrl -> employeeRepo : CreateNewEmployee(employee)
+            activate employeeRepo
+                employeeRepo -> employeeRepo : LocalValidation()
+                employeeRepo --> ctrl : registrationRecord
+            deactivate employeeRepo
+                ctrl --> ui : registrationRecord
+            deactivate ctrl
+            ui --> Administrator : validates and asks for confirmation
+    deactivate ui
+
+    Administrator -> ui : confirms
+    activate ui
+        ui -> ctrl : save()
+        activate ctrl
+            ctrl -> employeeRepo : save(employee)
+            activate employeeRepo
+                employeeRepo -> employeeRepo : globalValidation(employee)
+                employeeRepo -> employeeRepo : add(employee)
+                employeeRepo --> ctrl : success
+            deactivate employeeRepo
+            ctrl --> ui : success
+        deactivate ctrl
+        ui --> Administrator : records the information and notifies the success of the operation
+    deactivate ui
+deactivate Administrator
+
+@enduml

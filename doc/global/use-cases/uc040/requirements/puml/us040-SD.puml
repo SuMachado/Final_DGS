@@ -1,0 +1,87 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Consult the users in the waiting room of a Healthcare Facility
+
+autonumber
+
+actor Nurse
+participant ":CheckingScheduleInfo" as ui
+participant ":checkingScheduleInfoController" as ctrl
+participant Repositories
+participant "healthFacilitiesRepo : HealthFacilitiesRepo" as healthFacilitiesRepo
+
+activate Nurse
+
+    Nurse -> ui : log in nurse
+    activate ui
+
+        ui -> ctrl** : checkingQueueVaccination()
+        ui -> ctrl : getHealthFacilitySchedule()
+        activate ctrl
+
+            ctrl -> Repositories : getHealthFacilitySchedule()
+            activate Repositories
+                Repositories -> Repositories : getHealthFacility()
+                Repositories-->ctrl : getHealthFacility()
+            deactivate Repositories
+            ctrl -> healthFacilitiesRepo : getHealthFacility()
+            activate healthFacilitiesRepo
+                healthFacilitiesRepo -> healthFacilitiesRepo : getHealthFacility()
+                healthFacilitiesRepo --> ctrl : healthFacilityList
+            deactivate healthFacilitiesRepo
+            ctrl --> ui : healthFacilityList
+            deactivate ctrl
+            ui --> Nurse : shows the list of health facilities and asks to choose one
+
+    deactivate ui
+
+    Nurse -> ui : selects the health facility
+    activate ui
+
+        ui -> ctrl : asks for schedule(healthFacility)
+        activate ctrl
+
+            ctrl -> Repositories : getHealthFacilitySchedule()
+            activate Repositories
+                Repositories -> Repositories : getHealthFacilitySchedule()
+                Repositories --> ctrl : getHealthFacilitySchedule()
+            deactivate Repositories
+            ctrl -> healthFacilitiesRepo : getHealthFacilitySchedule(healthFacility)
+            activate healthFacilitiesRepo
+
+                healthFacilitiesRepo -> healthFacilitiesRepo : getHealthFacilitySchedule(healthFacility)
+                healthFacilitiesRepo --> ctrl : healthFacilitySchedule
+            deactivate healthFacilitiesRepo
+            ctrl --> ui : healthFacilitySchedule
+
+        deactivate ctrl
+        ui --> Nurse : shows the schedule for the day
+    deactivate ui
+
+'  Nurse -> ui : selects an appointment
+'    activate ui
+'        ui->ctrl : getAppointment()
+'        activate ctrl
+'            ctrl -> Repositories : getAppointment()
+'            activate Repositories
+'
+'                Repositories -> Repositories : getAppointment()
+'                Repositories --> ctrl : getAppointment()
+'            deactivate Repositories
+'            ctrl -> AppointmentRepo : getAppointment()
+'            activate AppointmentRepo
+'                AppointmentRepo -> AppointmentRepo : getAppointment()
+'                AppointmentRepo --> ctrl : AppointmentInfo
+'            deactivate AppointmentRepo
+'
+'            ctrl --> ui : AppointmentInfo
+'
+'        deactivate ctrl
+'        ui --> Nurse : shows the appointment info
+'
+
+deactivate Nurse
+@enduml

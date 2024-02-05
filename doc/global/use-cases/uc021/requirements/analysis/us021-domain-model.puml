@@ -1,0 +1,50 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title US021 - As receptionist, I want to schedule a vaccination
+
+class Facility {
+Health Center
+Vaccination Center
+}
+
+class Receptionist {
+    - Full Name
+    - Contact Details
+    - Address
+    - Date of Birth
+    - Emergency Contact Information
+    - Employee Type
+    - Documentation
+}
+
+class Vaccine_appointment {
+hour
+day
+month
+facility
+}
+
+class SNS_User {
+SNS user number
+Facility
+date
+time
+type of vaccine
+}
+
+'VaccineTechnology -down-Vaccine
+Facility " 1 " -- " * " Receptionist : has >
+Receptionist " 1 " -- " 1  " Vaccine_appointment : schedules
+SNS_User " 1 " -- " 1 " Vaccine_appointment : has a >
+
+@enduml

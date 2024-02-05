@@ -1,0 +1,126 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Create Online Appointment
+
+autonumber
+
+actor SNSUser
+participant ":CreateAppointmentUI" as ui
+participant ":CreateAppointmentController" as ctrl
+participant Repositories
+participant "healthFacilitiesRepo : HealthFacilitiesRepository" as healthFacilitiesRepo
+participant "vacTypeRepo : VaccineTypeRepository" as vacTypeRepo
+participant "vacType : VacType" as vacType
+
+activate SNSUser
+
+    SNSUser -> ui : starts the process of creating a new appointment
+    activate ui
+
+        ui -> ctrl** : create()
+
+        ui -> ctrl : getVacTypeRepository()
+        activate ctrl
+
+        ctrl -> Repositories : getVacTypeRepository()
+            activate Repositories
+                Repositories -> Repositories : vacTypeRepository()
+                Repositories -->ctrl : vacTypeRepo
+            deactivate Repositories
+            ctrl -> vacTypeRepo : getVacTypeRepository()
+             activate vacTypeRepo
+                vacTypeRepo -> vacTypeRepo : vacTypeRepository()
+                vacTypeRepo -->ctrl : vacTypeRepo
+            deactivate vacTypeRepo
+            ctrl --> ui : vacTypeList
+        deactivate ctrl
+            ui --> SNSUser : shows the Vaccine types available and requests data
+    deactivate ui
+
+    SNSUser -> ui : chooses a vacType
+        activate ui
+
+            ui -> ctrl : getHealthFacilitiesRepository()
+            activate ctrl
+
+            ctrl -> Repositories : getHealthFacilitiesRepository()
+            activate Repositories
+            Repositories -> Repositories : getHealthFacilitiesRepository()
+            Repositories --> ctrl : getHealthFacilitiesRepository()
+            deactivate Repositories
+            ctrl -> healthFacilitiesRepo : getHealthFacilitiesRepository()
+            activate healthFacilitiesRepo
+                healthFacilitiesRepo -> healthFacilitiesRepo : getHealthFacilitiesRepository()
+                healthFacilitiesRepo --> ctrl : healthFacilitiesList
+            deactivate healthFacilitiesRepo
+            ctrl --> ui : healthFacilitiesList
+            deactivate ctrl
+            ui --> SNSUser : shows the Health Facilities available and requests data
+        deactivate ctrl
+    deactivate ui
+
+    SNSUser -> ui : chooses an Health Facility
+    activate ui
+
+    ui -> ctrl : getHealthFacilitySchedule()
+        activate ctrl
+
+            ctrl -> Repositories : getHealthFacilitySchedule()
+            activate Repositories
+                Repositories -> Repositories : getHealthFacilitySchedule
+                Repositories --> ctrl :getHealthFacilitySchedule
+            deactivate Repositories
+            ctrl -> healthFacilitiesRepo : getHealthFacilitySchedule()
+            activate healthFacilitiesRepo
+                healthFacilitiesRepo -> healthFacilitiesRepo : getHealthFacilitySchedule
+                healthFacilitiesRepo --> ctrl : healthFacilitySchedule
+            deactivate healthFacilitiesRepo
+            ctrl --> ui : healthFacilitySchedule
+        deactivate ctrl
+        ui --> SNSUser : shows the facility Schedule (hour and day) and asks to choose one
+    deactivate ui
+
+    SNSUser -> ui : fills requested data (SNSUser number, chooses timeframe)
+    activate ui
+
+        ui -> ctrl : createAppointment(SNSUser number, vacType, healthFacility, hour, day)
+        activate ctrl
+
+            ctrl -> appointmentRepo : createAppointment(SNSUser number, vacType, healthFacility, hour, day)
+            activate appointmentRepo
+
+                appointmentRepo -> appointment** : create()
+                activate appointment
+                    appointment -> appointment : localValidation()
+                    appointment --> appointmentRepo : appointment
+                deactivate appointment
+                appointmentRepo -> appointmentRepo : globalValidation(appointment)
+                appointmentRepo --> ctrl : appointment
+            deactivate appointmentRepo
+            ctrl --> ui : appointment«
+        deactivate ctrl
+        ui --> SNSUser : validates and asks for confirmation
+    deactivate ui
+
+    SNSUser -> ui : confirms
+    activate ui
+
+        ui -> ctrl : save()
+        activate ctrl
+
+            ctrl -> appointmentRepo : save(appointment)
+            activate appointmentRepo
+                appointmentRepo -> appointmentRepo : globalValidation(appointment)
+                appointmentRepo -> appointmentRepo : add(appointment)
+                appointmentRepo --> ctrl : success
+            deactivate appointmentRepo
+            ctrl --> ui : success
+        deactivate ctrl
+        ui --> SNSUser : records the information and notifies the success of the operation
+    deactivate ui
+deactivate SNSUser
+
+@enduml

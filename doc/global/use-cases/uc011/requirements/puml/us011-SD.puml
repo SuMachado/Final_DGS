@@ -1,0 +1,78 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Register a Vaccine
+
+autonumber
+
+actor Administrator
+participant ":CreateRegisterVaccineUI" as ui
+participant ":CreateRegisterVaccineController" as ctrl
+participant Repositories
+participant "vacRepo : VaccineTypeRepository" as vaccineRepository
+participant "vacRepo : VaccineTypeRepository" as vaccineRepository
+
+activate Administrator
+
+    Administrator -> ui : starts the process of registering a vaccine
+    activate ui
+        ui -> ctrl** : create()
+        ui -> ctrl : getVaccineType()
+        activate ctrl
+            ctrl -> Repositories : getVaccineTypeRepository()
+            activate Repositories
+                Repositories -> Repositories : vaccineTypeRepository()
+                Repositories-->ctrl : vaccineRepository
+            deactivate Repositories
+            ctrl -> vaccineRepository : getVaccineType()
+            activate vaccineRepository
+                vaccineRepository -> vaccineRepository : getVaccineType()
+                vaccineRepository --> ctrl : vaccineTypeList
+            deactivate vaccineRepository
+            ctrl --> ui : vaccineTypeList
+            ui --> Administrator : shows the Vaccine Types available and requests data
+        deactivate ctrl
+    deactivate ui
+
+    Administrator -> ui : fills requested data (name, brand, vaccine type)
+    activate ui
+        ui -> ctrl : createVaccine(name, brand, vaccine type)
+        activate ctrl
+            ctrl -> Repositories : getVaccineRepository()
+            activate Repositories
+                Repositories -> Repositories : vaccineRepository()
+                Repositories --> ctrl : vaccineRepository
+            deactivate Repositories
+            ctrl -> vaccineRepository : createVaccine(name, brand, type)
+            activate vaccineRepository
+                vaccineRepository --> vaccine : create()
+                activate vaccine
+                    vaccine -> vaccine : localValidation()
+                    vaccine --> vaccineRepository : vaccine
+                deactivate vaccine
+                vaccineRepository -> vaccineRepository : globalValidation(vaccine)
+                vaccineRepository --> ctrl : vaccine
+            deactivate vaccineRepository
+            ctrl --> ui : vaccine
+        deactivate ctrl
+        ui --> Administrator : validates and asks for confirmation
+    deactivate ui
+
+    Administrator -> ui : confirms
+    activate ui
+        ui -> ctrl : save()
+        activate ctrl
+            ctrl -> vaccineRepository : save(vaccine)
+            activate vaccineRepository
+                vaccineRepository -> vaccineRepository : globalValidation(vaccine)
+                vaccineRepository -> vaccineRepository : add(vacType)
+                vaccineRepository --> ctrl : success
+            deactivate vaccineRepository
+            ctrl --> ui : success
+        deactivate ctrl
+        ui --> Administrator : records the information and notifies the success of the operation
+    deactivate ui
+deactivate Administrator
+@enduml

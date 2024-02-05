@@ -1,0 +1,39 @@
+@startuml
+'https://plantuml.com/object-diagram
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+
+class EmployeeRegistration {
+    - RegistrationID
+    - RegistrationDate
+    - ApprovalStatus
+}
+class Employee {
+    - EmployeeID
+    - Name
+    - Address
+    - Birthdate
+}
+
+class RegistrationRecords {
+    - RegistrationID
+}
+
+class Administrator
+
+
+EmployeeRegistration "1" -- "1..*" Employee : initiates registration for
+EmployeeRegistration "1" -- "1" RegistrationRecord : logs details in
+Administrator "1" -- "1..*" EmployeeRegistration : performs registration for
+Employee "1" -- "1..*" VaccinationCenter : works in
+Employee "1" -- "0..1" Administrator : gets validated through
+@enduml

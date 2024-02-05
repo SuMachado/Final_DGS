@@ -1,0 +1,47 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title US022 - As receptionist, I want to register the arrival of a SNS user to take the vaccine
+
+class Facility {
+Health Center
+Vaccination Center
+}
+
+class Vaccine_appointment {
+hour
+day
+month
+facility
+}
+
+class Receptionist {
+    - Full Name
+    - Contact Details
+    - Address
+    - Date of Birth
+    - Emergency Contact Information
+    - Employee Type
+    - Documentation
+}
+class Sns_User {
+SNS user number
+}
+
+
+'VaccineTechnology -down-Vaccine
+Facility " 1 " -- " * " Receptionist : has >
+Sns_User " 1 " -- " 1 " Facility : arrives >
+Receptionist " * " -- " 1 " Sns_User : receives >
+Receptionist " * " -- " 1 " Vaccine_appointment : validates >
+Sns_User " 1 " -- " 1 " Vaccine_appointment : " has "
+@enduml

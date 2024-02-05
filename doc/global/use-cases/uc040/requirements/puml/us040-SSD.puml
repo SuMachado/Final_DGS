@@ -1,0 +1,38 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Consult the users in the waiting room of a Healthcare Facility (SSD)
+
+autonumber
+
+actor Nurse
+participant ":System" as System
+
+activate Nurse
+
+    Nurse -> System : Logs in
+
+    activate System
+
+        System --> Nurse : Asks for credentials
+    deactivate System
+
+    Nurse -> System : Inserts credentials
+
+    activate System
+
+        System --> Nurse : Validates and shows the patients info (SNS user).\n Shows the vaccine's administrations instructions.
+    deactivate System
+
+    Nurse -> System : Checks the SNS users waiting list
+
+    activate System
+
+        System --> Nurse : shows SNS users queue
+    deactivate System
+
+deactivate Nurse
+
+@enduml

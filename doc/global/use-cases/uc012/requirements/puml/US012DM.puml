@@ -1,0 +1,51 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title US012 - Get List of All The Vaccines
+
+'object GetListofAllTheVaccines << (V, #FF7700) >>
+
+'GetListofAllTheVaccines --> RegisterVaccine
+
+class GetListOfAllTheVaccines {
+
+}
+
+class Vaccine {
+    id
+    name
+    brand
+    vaccineType
+}
+
+
+class RegisterVaccine {
+
+}
+
+class Administrator {
+user ID
+active Status
+login
+name
+phone
+email
+}
+
+
+GetListOfAllTheVaccines "1" -right- "*" Vaccine : is a part of <
+RegisterVaccine "*" -left- "*" Administrator : creates a <
+GetListOfAllTheVaccines "*" -right- "*" Administrator : creates a <
+RegisterVaccine "*" -right- "*" Vaccine : requires a >
+
+
+@enduml
